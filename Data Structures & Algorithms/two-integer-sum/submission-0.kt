@@ -1,24 +1,28 @@
 class Solution {
     fun twoSum(nums: IntArray, target: Int): IntArray {
-        // we are using map for lookup O(1)
-        val map = mutableMapOf<Int, Int>()
+        // TC: O(1) — HashMap initialisation, SC: O(n) — stores up to n entries
+        val seen = mutableMapOf<Int, Int>()
 
-        // interate through the nums array indices including the last index
-        for (i in nums.indices) {
-            // calculating the complement for current number from nums
-            val complement = target - nums[i]
+        // TC: O(n) — single pass through array
+        for ((index, num) in nums.withIndex()) {
 
-            // check if the complement key is present in the map
-            if (map.containsKey(complement)) {
-                // return the indices of the two complementary numbers
-                return intArrayOf(map[complement]!!, i)
+            // Calculate what value we need to complete the pair
+            // TC: O(1) — arithmetic op, SC: O(1) — single Int
+            val complement = target - num
+
+            // TC: O(1) average — HashMap lookup
+            if (seen.containsKey(complement)) {
+                // Both indices found — return immediately
+                // TC: O(1), SC: O(1)
+                return intArrayOf(seen[complement]!!, index)
             }
 
-            // if not found then add the number (key) -> index (value) in the map
-            map[nums[i]] = i
+            // Store current number and its index for future lookups
+            // TC: O(1) average — HashMap insert, SC: O(1) per entry
+            seen[num] = index
         }
 
-        // throw an exception kotlin's idiomatic way
-        throw IllegalArgumentException("No two numbers make upto a target!")
+        // Kotlin idiomatic exception — only reached if no pair exists
+        throw IllegalArgumentException("No two numbers sum up to target!")
     }
 }
